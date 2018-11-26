@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Vidly.Models;
 
 namespace MovieStore.Models
 {
@@ -20,6 +21,9 @@ namespace MovieStore.Models
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+        //Fazer o reconhecimento da classe Customer
+        public DbSet<Customer> Customers { get; set; }
+
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {

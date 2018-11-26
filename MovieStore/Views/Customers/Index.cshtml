@@ -1,0 +1,51 @@
+﻿@model Vidly.ViewModels.CustomersViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Customers</h2>
+
+<table>
+    <thead>
+        <tr>
+            <td>
+                Customer
+            </td>
+
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Costumers.Count == 0)
+        {
+            <tr>
+                <td>Don't existis any customer registered</td>
+            </tr>
+        }
+        else
+        {
+            foreach (var customer in Model.Costumers)
+            {
+                <tr>
+                    @*<td>@customer.Name</td>*@
+                    @*
+                        /customers/details/id
+
+                        - primeiro parametro é o nome que ficará exposto
+                        - segundo parametro é o nome da action
+                        - terceiro paraemetro é o nome da controller
+                        - quarto parametro é o parametro que deseja passar
+                        - quinto parametro tem que passar null pra funcionar (erro da microsoft)
+
+                    *@
+                    <td>@Html.ActionLink(customer.Name, "Details", "Customers", new { id = customer.Id }, null)</td>
+                </tr>
+            }
+        }
+        <tr></tr>
+
+    </tbody>
+
+
+</table>
+
