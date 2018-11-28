@@ -1,50 +1,79 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using MovieStore.Models;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using Vidly.Models;
-using Vidly.ViewModels;
+using System.Data.Entity;
+using MovieStore.ViewModels;
 
-namespace Vidly.Controllers
+namespace MovieStore.Controllers
 {
     public class CustomersController : Controller
     {
+        private ApplicationDbContext _context;
+
+        //Construtor
+        public CustomersController()
+        {
+            _context = new ApplicationDbContext();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _context.Dispose();
+        }
 
         //Customers
         // GET: Customer
+        [HttpGet]
         public ActionResult Index()
         {
-            var customers = new CustomersViewModel();
+            //O include é utilizado para incluir o objeto relacionado com o Customer que é o MembershipType
+            var customer = _context.Customers.Include(c => c.MembershipType).ToList();
 
-            customers.Costumers = new List<Customer>
+            if (customer == null)
             {
-                new Customer{Name = "Renan", Id = 1},
-                new Customer{Name = "Marcos", Id = 2}
-
-            };
-
-            return View(customers);
+                return HttpNotFound();
+            }
+            return View(customer);
         }
 
         //Customers/details
         public ActionResult Details(int id)
         {
+            //Buscar customer por ID usando o lambda
+            var customer = _context.Customers.Include(c => c.MembershipType).FirstOrDefault(c => c.Id == id);
 
-            var customer = new Customer();
-
-            switch (id)
+            if (customer == null)
             {
-                case 1:
-                    customer.Name = "Renan";
-                    break;
-                case 2:
-                    customer.Name = "Marcos";
-                    break;
-                default: return HttpNotFound();
-
+                return HttpNotFound();
             }
+
             return View(customer);
+        }
+
+        public ActionResult New()
+        {
+            var membershipTypes = _context.MembershipTypes.ToList();
+            var viewModel = new NewCustomerViewModel
+            {
+                MembershipTypes = membershipTypes
+            };
+
+            return View(viewModel);
+        }
+
+        /*
+         * Post usado para criar e editar
+         */
+        [HttpPost]
+        public ActionResult Create(Customer customer)
+        {
+            _context.Customers.Add(customer);
+            _context.SaveChanges();
+
+
+            //Ao salvar voce da o redirect para a pagina Index
+            //RedirectToAction(Action, ControllerName)
+            return RedirectToAction("Index", "Customers") ;
         }
     }
 }

@@ -1,0 +1,23 @@
+﻿@model MovieStore.Models.Movie
+
+@{
+    ViewBag.Title = "View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.Name</h2>
+
+<ul style="list-style:none">
+    <li>Genre: @Model.Genre.Name</li>
+    <li>Release Date: @Model.ReleaseDate.ToLongDateString()</li>
+    <li>Date Added: @Model.AddDate.ToLongDateString()</li>
+    <li>Number in Stock: @Model.NumberInStock</li>
+    @if (Model.Actor != null)
+    {
+        <li>Actor: @Model.Actor</li>
+    }
+    else
+    {
+        <li>Dont have any actor</li>
+    }   
+</ul>

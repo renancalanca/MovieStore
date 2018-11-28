@@ -1,12 +1,27 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
-using Vidly.Models;
-using Vidly.ViewModels;
+using MovieStore.Models;
+using MovieStore.ViewModels;
+using System.Data.Entity;
+using System.Linq;
 
-namespace Vidly.Controllers
+namespace MovieStore.Controllers
 {
     public class MoviesController : Controller
     {
+        private ApplicationDbContext _context;
+
+        //Construtor
+        public MoviesController()
+        {
+            _context = new ApplicationDbContext();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _context.Dispose();
+        }
+
         //Action é o método de uma controller como por exemplo o random, e caso você passe um ID para ele, na URL você também tem que passar
         // GET: Movies/Random
         public ActionResult Random()
@@ -25,6 +40,7 @@ namespace Vidly.Controllers
             };
 
             return View(viewModel);
+
 
             //Outros tipos de Retorno
             //return Content("Hello World!");
@@ -45,26 +61,15 @@ namespace Vidly.Controllers
 
         //Movies
         //Como colocado no RegisterRoutes a action com nome Index é a que é chamado por padrão quando não especificado nenhuma action na URL
-        public ActionResult Index(int? pageIndex, string sortBy)
+        public ActionResult Index()
         {
-            var movies = new MoviesViewModel();
+            var movies = _context.Movies.Include(c => c.Genre).ToList();
 
-            if (!pageIndex.HasValue)
+            if (movies == null)
             {
-                pageIndex = 1;
+                return HttpNotFound();
             }
-
-            if (string.IsNullOrEmpty(sortBy))
-            {
-                movies.Movies = new List<Movie>
-                {
-                    new Movie { Name = "Sherek" },
-                    new Movie { Name = "One Piece" }
-                };
-            }
-
             return View(movies);
-            //return Content("pageIndex = " + pageIndex + " & sortBy = " + sortBy);
         }
 
         //Definir uma rota especifica
@@ -73,5 +78,17 @@ namespace Vidly.Controllers
         {
             return Content(year + "/" + month);
         }
+
+        public ActionResult Details(int id)
+        {
+            var movie = _context.Movies.Include(c => c.Genre).FirstOrDefault(c => c.Id == id);
+
+            if(movie == null)
+            {
+                return HttpNotFound();
+            }
+            return View(movie);
+        }
+
     }
 }

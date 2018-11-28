@@ -1,4 +1,4 @@
-﻿@model Vidly.Models.Customer
+﻿@model MovieStore.Models.Customer
 @{
     ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -6,3 +6,15 @@
 
 <h2>@Model.Name</h2>
 
+<ul>
+    <li>Membershipe Type: @Model.MembershipType.Name</li>
+    @*
+        -Verifica se existe valor para não estourar exception
+        -Formatação do Datetime
+    *@
+    @if (Model.Birth.HasValue)
+    {
+        <li>Birth date: @Model.Birth.Value.ToString("dd/MM/yyyy")</li>
+    }
+
+</ul>

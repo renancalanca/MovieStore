@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Vidly.Models;
+using MovieStore.Models;
 
-namespace Vidly.ViewModels
+namespace MovieStore.ViewModels
 {
     public class MoviesViewModel
     {
