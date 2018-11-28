@@ -1,0 +1,83 @@
+﻿@model MovieStore.ViewModels.CustomerFormViewModel
+@{
+    ViewBag.Title = "CustomerForm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.Title</h2>
+
+@*
+    ValidationSummary, caso passe vazio ele lista os erros, se preferir só escrever alguma mensagem é só utilizar a seguinte forma
+*@
+
+@Html.ValidationSummary(true, "Correct the following erros, please.")
+
+@*Nome da action e o nome de controller*@
+@using (Html.BeginForm("Save", "Customers"))
+{
+    /*
+     Ao utilizar o LabelFor e TextBoxFor utilzando o modelo, ele ja pega as validaçoes como por exemplo o Required do Name
+     */
+    <div class="form-group">
+        @Html.LabelFor(m => m.Customer.Name)
+        @*
+            Ao utilizar o new { @class = "css class"} você consegue definir o tipo de classe do CSS que voce deseja
+        *@
+        @Html.TextBoxFor(m => m.Customer.Name, new { @class = "form-control" })
+
+        @*
+            Validação do campo a partir das anotations da model
+            Ex: Required, string lenght, etc.
+        *@
+        @Html.ValidationMessageFor(m => m.Customer.Name)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Customer.Birth)
+        @Html.TextBoxFor(m => m.Customer.Birth, "{0:d MMM yyy}", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Customer.Birth)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Customer.MembershipType)
+        @*
+            Argumentos DropDownListFor:
+                1: Valor
+                2: Lista de objetos
+                3: Valor mostrado no primeiro Drop
+                4: Css Class
+            Argumentos 1, 2 e 3 do método SelectList()
+            No SelectList(Lista de objeto, valor da dropdown, valor mostrado ao usuário)
+
+            Depois Testar a diferença entre:
+                - m => m.Customer.MembershipType
+                - m => m.Customer.MembershipTypeId
+
+                Ao receber o MembershiType não funciona, pois ele não passa pro Objeto Customer na controller o ID e também não é possivel passar o objeto MembershipType dentro do objeto Customer
+        *@
+        @Html.DropDownListFor(m => m.Customer.MembershipTypeId, new SelectList(Model.MembershipTypes, "Id", "Name"), "Select MemberShipType", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Customer.MembershipTypeId)
+    </div>
+    <div class="checkbox">
+        <label>
+            @Html.CheckBoxFor(m => m.Customer.IsSubscribedToNewsletter) Subscribed to Newsletter?
+        </label>
+    </div>
+
+    @Html.HiddenFor(m => m.Customer.Id)
+
+    @*
+        Ao dizer que o type="submit" você já indica que está enviando um POST (pelo fato também de estár no BeginForm)
+    *@
+    <button type="submit" class="btn btn-primary">Save</button>
+
+    @Html.ActionLink("Back", "Index", "Customers", new { @class = "btn btn-primary" })
+
+
+
+}
+@*
+        
+*@
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}

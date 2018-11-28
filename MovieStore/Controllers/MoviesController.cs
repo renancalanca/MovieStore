@@ -4,6 +4,8 @@ using MovieStore.Models;
 using MovieStore.ViewModels;
 using System.Data.Entity;
 using System.Linq;
+using System.Data.Entity.Validation;
+using System;
 
 namespace MovieStore.Controllers
 {
@@ -56,7 +58,22 @@ namespace MovieStore.Controllers
             /*http://localhost:54255/movies/edit?id=1 */
             /*http://localhost:54255/movies/edit/1 */
 
-            return Content("id= " + id);
+
+            var movie = _context.Movies.SingleOrDefault(m => m.Id == id);
+
+            if (movie == null)
+            {
+                return HttpNotFound();
+            }
+
+            var viewModel = new MovieFormViewModel
+            {
+                Genres = _context.Genres.ToList(),
+                Movie = movie
+            };
+
+            return View("MovieForm", viewModel);
+
         }
 
         //Movies
@@ -83,12 +100,69 @@ namespace MovieStore.Controllers
         {
             var movie = _context.Movies.Include(c => c.Genre).FirstOrDefault(c => c.Id == id);
 
-            if(movie == null)
+            if (movie == null)
             {
                 return HttpNotFound();
             }
             return View(movie);
         }
 
+        public ActionResult New()
+        {
+            var viewModel = new MovieFormViewModel
+            {
+                //Movie = new Movie(),
+                Genres = _context.Genres.ToList()
+            };
+
+            return View("MovieForm", viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult Save(Movie movie)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    var viewModel = new MovieFormViewModel
+                    {
+                        Movie = movie,
+                        Genres = _context.Genres.ToList()
+                    };
+
+                    return View("MovieForm", viewModel);
+                }
+
+                if (movie.Id == 0)
+                {
+                    _context.Movies.Add(movie);
+                }
+                else
+                {
+                    var movieEdit = _context.Movies.SingleOrDefault(m => m.Id == movie.Id);
+
+                    movieEdit.Name = movie.Name;
+                    movieEdit.ReleaseDate = movie.ReleaseDate;
+                    movieEdit.AddDate = movie.AddDate;
+                    movieEdit.Actor = movie.Actor;
+                    movieEdit.GenreId = movie.GenreId;
+                    movieEdit.NumberInStock = movie.NumberInStock;
+
+                }
+
+                _context.SaveChanges();
+            }
+            catch (DbEntityValidationException e)
+            {
+                return HttpNotFound();
+            }
+            catch (Exception e)
+            {
+                return HttpNotFound();
+            }
+
+            return RedirectToAction("Index", "Movies");
+        }
     }
 }

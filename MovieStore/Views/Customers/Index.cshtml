@@ -5,7 +5,11 @@
 }
 
 <h2>Customers</h2>
-
+<div class="form-group">
+    <div class="form-group">
+        @Html.ActionLink("New Customer", "New", "Customers", new { @class = "btn btn-primary" })
+    </div>
+</div>
 <table class="table table-bordered table-hover">
     <thead>
         <tr>
@@ -36,7 +40,7 @@
                         - quinto parametro tem que passar null pra funcionar (erro da microsoft)
 
                     *@
-                    <td>@Html.ActionLink(customer.Name, "Details", "Customers", new { id = customer.Id }, null)</td>
+                    <td>@Html.ActionLink(customer.Name, "Edit", "Customers", new { id = customer.Id }, null)</td>
                     <td>@customer.MembershipType.Name</td>
                 </tr>
             }

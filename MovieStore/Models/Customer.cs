@@ -1,15 +1,17 @@
-﻿using System;
+﻿using MovieStore.Models.Validators;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace MovieStore.Models
 {
     public class Customer
     {
-        //Ao usar o ID o entity reconhece automaticamente como Primary Key
+        //Ao usar o ID o entity reconhece automaticamente como Primary Key]
         public int Id { get; set; }
 
         //Você consegue determinar as caracteristicas da tabela pelas annotations
-        [Required]
+        //Para mostrar a mensagem de erro que eu desejo
+        [Required(ErrorMessage ="O nome é obrigatorioooooooo!!!")]
         [StringLength(255)]
         public string Name { get; set; }
 
@@ -17,6 +19,8 @@ namespace MovieStore.Models
         
         //Aparecerá o nome que você colocar ao utilizar os razor For Ex: @Html.LabelFor, 
         [Display(Name = "Date of Birth")]
+        //Adicionar Validação Custom
+        [Min18IfAMember]
         public DateTime? Birth { get; set; }
 
         public MembershipType MembershipType { get; set; }
