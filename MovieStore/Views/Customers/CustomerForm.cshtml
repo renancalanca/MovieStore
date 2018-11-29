@@ -65,9 +65,15 @@
     @Html.HiddenFor(m => m.Customer.Id)
 
     @*
+        Gerar cookie para proteger o site de request aleatorios
+    *@
+    @Html.AntiForgeryToken()
+    @*
+
         Ao dizer que o type="submit" você já indica que está enviando um POST (pelo fato também de estár no BeginForm)
     *@
     <button type="submit" class="btn btn-primary">Save</button>
+
 
     @Html.ActionLink("Back", "Index", "Customers", new { @class = "btn btn-primary" })
 
@@ -75,7 +81,7 @@
 
 }
 @*
-        
+
 *@
 @section scripts
 {

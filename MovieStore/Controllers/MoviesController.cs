@@ -66,10 +66,9 @@ namespace MovieStore.Controllers
                 return HttpNotFound();
             }
 
-            var viewModel = new MovieFormViewModel
+            var viewModel = new MovieFormViewModel(movie)
             {
-                Genres = _context.Genres.ToList(),
-                Movie = movie
+                Genres = _context.Genres.ToList()
             };
 
             return View("MovieForm", viewModel);
@@ -109,9 +108,8 @@ namespace MovieStore.Controllers
 
         public ActionResult New()
         {
-            var viewModel = new MovieFormViewModel
+            var viewModel = new MovieFormViewModel()
             {
-                //Movie = new Movie(),
                 Genres = _context.Genres.ToList()
             };
 
@@ -119,15 +117,15 @@ namespace MovieStore.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Save(Movie movie)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    var viewModel = new MovieFormViewModel
+                    var viewModel = new MovieFormViewModel(movie)
                     {
-                        Movie = movie,
                         Genres = _context.Genres.ToList()
                     };
 
@@ -136,6 +134,7 @@ namespace MovieStore.Controllers
 
                 if (movie.Id == 0)
                 {
+                    movie.AddDate = DateTime.Now;
                     _context.Movies.Add(movie);
                 }
                 else
@@ -144,7 +143,7 @@ namespace MovieStore.Controllers
 
                     movieEdit.Name = movie.Name;
                     movieEdit.ReleaseDate = movie.ReleaseDate;
-                    movieEdit.AddDate = movie.AddDate;
+                    movieEdit.AddDate = DateTime.Now;
                     movieEdit.Actor = movie.Actor;
                     movieEdit.GenreId = movie.GenreId;
                     movieEdit.NumberInStock = movie.NumberInStock;

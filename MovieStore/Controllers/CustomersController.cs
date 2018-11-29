@@ -69,6 +69,8 @@ namespace MovieStore.Controllers
          * Post usado para criar e editar
          */
         [HttpPost]
+        //Validação do Token 
+        [ValidateAntiForgeryToken]
         public ActionResult Save(Customer customer)
         {
             try
