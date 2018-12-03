@@ -18,7 +18,7 @@ namespace MovieStore.Dto
 
         public bool IsSubscribedToNewsletter { get; set; }
 
-        [Min18IfAMember]
+        //[Min18IfAMember]
         public DateTime? Birth { get; set; }
 
         public byte MembershipTypeId { get; set; }

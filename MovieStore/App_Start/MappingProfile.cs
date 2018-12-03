@@ -16,6 +16,9 @@ namespace MovieStore.App_Start
             // Ele utiliza reflection para fazer esse mapping
             Mapper.CreateMap<Customer, CustomerDto>();
             Mapper.CreateMap<CustomerDto, Customer>();
+            Mapper.CreateMap<Movie, MovieDto>();
+            Mapper.CreateMap<MovieDto, Movie>();
+
         }
     }
 }
