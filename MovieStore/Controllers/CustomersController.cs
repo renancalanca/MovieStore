@@ -42,14 +42,15 @@ namespace MovieStore.Controllers
         public ActionResult Details(int id)
         {
             //Buscar customer por ID usando o lambda
-            var customer = _context.Customers.Include(c => c.MembershipType).FirstOrDefault(c => c.Id == id);
+            //var customer = _context.Customers.Include(c => c.MembershipType).FirstOrDefault(c => c.Id == id);
 
-            if (customer == null)
-            {
-                return HttpNotFound();
-            }
+            //if (customer == null)
+            //{
+            //    return HttpNotFound();
+            //}
 
-            return View(customer);
+            //return View(customer);
+            return View();
         }
 
         public ActionResult New()

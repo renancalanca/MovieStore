@@ -4,9 +4,8 @@ using MovieStore.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
+using System.Data.Entity;
 
 namespace MovieStore.Controllers.Api
 {
@@ -21,9 +20,11 @@ namespace MovieStore.Controllers.Api
 
         //Corrigir
         //Get api/movies
-        public IEnumerable<MovieDto> GetMovies()
+        public IHttpActionResult GetMovies()
         {
-            return null;
+            var movies = _context.Movies.Include(m => m.Genre).Select(Mapper.Map<Movie, MovieDto>);
+
+            return Ok(movies);
         }
 
         //Get api/movies/1
@@ -61,14 +62,38 @@ namespace MovieStore.Controllers.Api
         //Update
         //PUT api/movies/
         [HttpPut]
-        public IHttpActionResult UpdateMovie(int id)
+        public IHttpActionResult UpdateMovie(int id, MovieDto movieDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var movie = _context.Movies.SingleOrDefault(m => m.Id == id);
+
+            if (movie == null)
+                return NotFound();
+
+            //Preciso colocar fora do Ok pois é preciso atualizar e dar o save changes no BD 
+            Mapper.Map(movieDto, movie);
+
+            _context.SaveChanges();
+
+            return Ok();
+        }
+
+        [HttpDelete]
+        [Authorize(Roles = RoleName.CanManageMovies)]
+        public IHttpActionResult DeleteMovie(int id)
         {
             var movie = _context.Movies.SingleOrDefault(m => m.Id == id);
 
             if (movie == null)
                 return NotFound();
-        
-            return Ok(Mapper.Map<Movie, MovieDto>(movie));
+
+            _context.Movies.Remove(movie);
+            _context.SaveChanges();
+
+            return Ok();
+
         }
 
 

@@ -22,5 +22,7 @@ namespace MovieStore.Dto
         public DateTime? Birth { get; set; }
 
         public byte MembershipTypeId { get; set; }
+
+        public MembershipTypeDto MembershipType { get; set; }
     }
 }

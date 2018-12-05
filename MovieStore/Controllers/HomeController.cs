@@ -6,6 +6,8 @@ using System.Web.Mvc;
 
 namespace MovieStore.Controllers
 {
+    //Permite passar pro authorized
+    [AllowAnonymous]
     public class HomeController : Controller
     {
         public ActionResult Index()

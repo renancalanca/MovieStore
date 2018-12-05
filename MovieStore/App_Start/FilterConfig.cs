@@ -7,7 +7,10 @@ namespace MovieStore
     {
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
+            //Redirect to error page
             filters.Add(new HandleErrorAttribute());
+            //Adicionar authorized globalmente
+            filters.Add(new AuthorizeAttribute());
         }
     }
 }

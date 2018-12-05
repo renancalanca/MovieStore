@@ -53,6 +53,7 @@ namespace MovieStore.Controllers
         }
 
         //Movies/Edit
+        [Authorize(Roles = RoleName.CanManageMovies)]
         public ActionResult Edit(int id)
         {
             /*http://localhost:54255/movies/edit?id=1 */
@@ -79,13 +80,10 @@ namespace MovieStore.Controllers
         //Como colocado no RegisterRoutes a action com nome Index é a que é chamado por padrão quando não especificado nenhuma action na URL
         public ActionResult Index()
         {
-            var movies = _context.Movies.Include(c => c.Genre).ToList();
-
-            if (movies == null)
-            {
-                return HttpNotFound();
-            }
-            return View(movies);
+            if (User.IsInRole(RoleName.CanManageMovies))
+                return View();
+            else
+                return View(RoleName.ReadOnlyList);
         }
 
         //Definir uma rota especifica
@@ -106,6 +104,7 @@ namespace MovieStore.Controllers
             return View(movie);
         }
 
+        [Authorize(Roles = RoleName.CanManageMovies)]
         public ActionResult New()
         {
             var viewModel = new MovieFormViewModel()

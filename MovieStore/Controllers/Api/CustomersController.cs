@@ -2,10 +2,8 @@
 using MovieStore.Dto;
 using MovieStore.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
+using System.Data.Entity;
 using System.Web.Http;
 
 namespace MovieStore.Controllers.Api
@@ -24,8 +22,10 @@ namespace MovieStore.Controllers.Api
         public IHttpActionResult GetCustomers()
         {
             //Ao utilziar o SELECT dessa forma voce mapeia as propriedades do Customer para o DTO
-            var customer = _context.Customers.ToList().Select(Mapper.Map<Customer, CustomerDto>);
-            return Ok();
+            var customer = _context.Customers.Include(c => c.MembershipType)
+               .Select(Mapper.Map<Customer, CustomerDto>);
+
+            return Ok(customer);
             //return Ok(Mapper.Map<Customer,CustomerDto>(customer));
 
         }
@@ -62,34 +62,38 @@ namespace MovieStore.Controllers.Api
 
         //PUT /api/customers/1
         [HttpPut]
-        public void UpdateCustomer(int id, CustomerDto customerDto)
+        public IHttpActionResult UpdateCustomer(int id, CustomerDto customerDto)
         {
             if (!ModelState.IsValid)
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
+                return BadRequest();
 
             var customerDb = _context.Customers.SingleOrDefault(c => c.Id == id);
 
             if (customerDb == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return NotFound();
 
-            //Adiciona propriedades de um no outro
+            //Adiciona propriedades de um no outro  
             Mapper.Map(customerDto, customerDb);
 
             _context.SaveChanges();
+
+            return Ok();
 
         }
 
         //DELETE /api/customers/1
         [HttpDelete]
-        public void DeleteCustomer(int id)
+        public IHttpActionResult DeleteCustomer(int id)
         {
             var customerDb = _context.Customers.SingleOrDefault(c => c.Id == id);
 
             if (customerDb == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return NotFound();
 
             _context.Customers.Remove(customerDb);
             _context.SaveChanges();
+
+            return Ok();
 
         }
     }
