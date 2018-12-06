@@ -11,6 +11,8 @@ namespace MovieStore
             filters.Add(new HandleErrorAttribute());
             //Adicionar authorized globalmente
             filters.Add(new AuthorizeAttribute());
+            //Obrigar a usar o HTTPS
+            filters.Add(new RequireHttpsAttribute());
         }
     }
 }

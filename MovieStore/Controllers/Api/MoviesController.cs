@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using System.Data.Entity;
+using MovieStore.Models.IdentityModels;
 
 namespace MovieStore.Controllers.Api
 {
@@ -41,6 +42,7 @@ namespace MovieStore.Controllers.Api
         //Create
         //POST api/movies
         [HttpPost]
+        [Authorize(Roles = RoleName.CanManageMovies)]
         public IHttpActionResult CreateMovie(MovieDto movieDto)
         {
             if (!ModelState.IsValid)
@@ -62,6 +64,7 @@ namespace MovieStore.Controllers.Api
         //Update
         //PUT api/movies/
         [HttpPut]
+        [Authorize(Roles = RoleName.CanManageMovies)]
         public IHttpActionResult UpdateMovie(int id, MovieDto movieDto)
         {
             if (!ModelState.IsValid)

@@ -6,6 +6,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Data.Entity.Validation;
 using System;
+using MovieStore.Models.IdentityModels;
 
 namespace MovieStore.Controllers
 {
@@ -26,6 +27,7 @@ namespace MovieStore.Controllers
 
         //Action é o método de uma controller como por exemplo o random, e caso você passe um ID para ele, na URL você também tem que passar
         // GET: Movies/Random
+        [Authorize(Roles = RoleName.CanManageMovies)]
         public ActionResult Random()
         {
             var movie = new Movie() { Name = "One piece" };
@@ -83,11 +85,12 @@ namespace MovieStore.Controllers
             if (User.IsInRole(RoleName.CanManageMovies))
                 return View();
             else
-                return View(RoleName.ReadOnlyList);
+                return View(RoleName.ReadOnlyUser);
         }
 
         //Definir uma rota especifica
         [Route("movies/released/{year:regex(\\d{4})}/{month:regex(\\d{2})}")]
+        [Authorize(Roles = RoleName.CanManageMovies)]
         public ActionResult ByReleaseDate(int year, int month)
         {
             return Content(year + "/" + month);
@@ -116,7 +119,11 @@ namespace MovieStore.Controllers
         }
 
         [HttpPost]
+
+        //Somente enviado pela aplicação evitando json de fora
         [ValidateAntiForgeryToken]
+
+        [Authorize(Roles = RoleName.CanManageMovies)]
         public ActionResult Save(Movie movie)
         {
             try

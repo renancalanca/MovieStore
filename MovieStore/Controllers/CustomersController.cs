@@ -5,6 +5,7 @@ using System.Data.Entity;
 using MovieStore.ViewModels;
 using System;
 using System.Data.Entity.Validation;
+using MovieStore.Models.IdentityModels;
 
 namespace MovieStore.Controllers
 {

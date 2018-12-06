@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Data.Entity;
 using System.Web.Http;
+using MovieStore.Models.IdentityModels;
 
 namespace MovieStore.Controllers.Api
 {

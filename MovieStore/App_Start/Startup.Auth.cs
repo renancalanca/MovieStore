@@ -6,6 +6,7 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Owin;
 using MovieStore.Models;
+using MovieStore.Models.IdentityModels;
 
 namespace MovieStore
 {
@@ -19,7 +20,7 @@ namespace MovieStore
             app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
             app.CreatePerOwinContext<ApplicationSignInManager>(ApplicationSignInManager.Create);
 
-            // Enable the application to use a cookie to store information for the signed in user
+            // Enable the application to use a cookie to store information for the sigMovieStore.Models.ned in user
             // and to use a cookie to temporarily store information about a user logging in with a third party login provider
             // Configure the sign in cookie
             app.UseCookieAuthentication(new CookieAuthenticationOptions
@@ -54,9 +55,10 @@ namespace MovieStore
             //   consumerKey: "",
             //   consumerSecret: "");
 
-            //app.UseFacebookAuthentication(
-            //   appId: "",
-            //   appSecret: "");
+            //Dar acesso pelo facebook
+            app.UseFacebookAuthentication(
+               appId: "614191699000073",
+               appSecret: "6a51553095e5c4c02dfd32bf21d95d79");
 
             //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
             //{
