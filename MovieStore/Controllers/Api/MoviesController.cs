@@ -21,11 +21,20 @@ namespace MovieStore.Controllers.Api
 
         //Corrigir
         //Get api/movies
-        public IHttpActionResult GetMovies()
+        public IHttpActionResult GetMovies(string query = null)
         {
-            var movies = _context.Movies.Include(m => m.Genre).Select(Mapper.Map<Movie, MovieDto>);
+            var moviesQuery = _context.Movies
+               .Include(m => m.Genre)
+               .Where(m => m.NumberAvailable > 0);
 
-            return Ok(movies);
+            if (!string.IsNullOrWhiteSpace(query))
+                moviesQuery = moviesQuery.Where(m => m.Name.Contains(query));
+
+            var moviesDto = moviesQuery
+                .ToList()
+                .Select(Mapper.Map<Movie, MovieDto>);
+
+            return Ok(moviesDto);
         }
 
         //Get api/movies/1
@@ -49,6 +58,7 @@ namespace MovieStore.Controllers.Api
                 return BadRequest();
 
             var movie = Mapper.Map<MovieDto, Movie>(movieDto);
+            //movie.NumberAvailable = movie.NumberInStock;
             _context.Movies.Add(movie);
             _context.SaveChanges();
 

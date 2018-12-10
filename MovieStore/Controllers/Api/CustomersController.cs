@@ -20,14 +20,28 @@ namespace MovieStore.Controllers.Api
 
         // GET /api/customers
         //[HttpGet]
-        public IHttpActionResult GetCustomers()
+        public IHttpActionResult GetCustomers(string query = null)
         {
             //Ao utilziar o SELECT dessa forma voce mapeia as propriedades do Customer para o DTO
-            var customer = _context.Customers.Include(c => c.MembershipType)
-               .Select(Mapper.Map<Customer, CustomerDto>);
+            //var customer = _context.Customers.Include(c => c.MembershipType)
+            //   .Select(Mapper.Map<Customer, CustomerDto>);
 
-            return Ok(customer);
+            //return Ok(customer);
             //return Ok(Mapper.Map<Customer,CustomerDto>(customer));
+
+
+            //Depois do modulo 11
+            var customersQuery = _context.Customers
+                .Include(c => c.MembershipType);
+
+            if (!string.IsNullOrWhiteSpace(query))
+                customersQuery = customersQuery.Where(c => c.Name.Contains(query));
+
+            var customerDtos = customersQuery
+                .ToList()
+                .Select(Mapper.Map<Customer, CustomerDto>);
+
+            return Ok(customerDtos);
 
         }
 

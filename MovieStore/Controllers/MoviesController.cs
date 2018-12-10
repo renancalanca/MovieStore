@@ -83,7 +83,7 @@ namespace MovieStore.Controllers
         public ActionResult Index()
         {
             if (User.IsInRole(RoleName.CanManageMovies))
-                return View();
+                return View(RoleName.CanManageMovies);
             else
                 return View(RoleName.ReadOnlyUser);
         }

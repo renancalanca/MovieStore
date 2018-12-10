@@ -28,6 +28,8 @@ namespace MovieStore.Models
         [Display(Name = "Stock")]
         public int NumberInStock { get; set; }
 
+        public int NumberAvailable { get; set; }
+
         public string Actor { get; set; }
 
         public Genre Genre { get; set; }

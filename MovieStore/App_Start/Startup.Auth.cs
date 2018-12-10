@@ -7,6 +7,7 @@ using Microsoft.Owin.Security.Google;
 using Owin;
 using MovieStore.Models;
 using MovieStore.Models.IdentityModels;
+using System.Configuration;
 
 namespace MovieStore
 {
@@ -57,8 +58,8 @@ namespace MovieStore
 
             //Dar acesso pelo facebook
             app.UseFacebookAuthentication(
-               appId: "614191699000073",
-               appSecret: "6a51553095e5c4c02dfd32bf21d95d79");
+               appId: ConfigurationManager.AppSettings["FacebookAppId"],
+               appSecret: ConfigurationManager.AppSettings["FacebookAppSecret"]);
 
             //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
             //{
