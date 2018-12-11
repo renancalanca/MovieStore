@@ -1,0 +1,89 @@
+download web essentials sepa
+
+=============== Anotações ==================================
+Partial view is a view that can be re use in different pages
+
+-> Action é o método da contoller
+
+-> ActionResult (action que fica na controller) pode retornar diversos tipos:
+	- View()
+	- PartialView()
+	- ContentResult() (retorna texto simples)
+	- RedirectResult() (redireciona URL)
+	- RedirectToAction()
+	- Json() 
+	- File()
+	- HttpNotFound()
+	- EmptyResult() (void)
+	
+-> Ao criar custom Routes no RouteConfig é necessário ser do mais especifico pro mais genério, ou seja, o Default fica por ultimo
+
+========================ENTITY CODE FIRST=====================================
+
+-> Adicionar o DbSet do modelo na classe IdentityModels, método ApplicationDbContext para o 
+migrations reconhecer sua classe e começar a atualiza-lá
+-> enable-migrations
+habilita o migrations e inica o contexto 
+-> add-migration *Nome*
+cria uma migration com o nome dado
+-> update-database
+cria o database e atualiza
+-> update-database -script
+Cria o Script SQL do migration, recomendado para quando for fazer o deploy pela primeira vez
+
+-> update-database -script -sourceMigration:*Especificar o nome da classe do migration*
+
+
+-> Você pode usar migration para popular o bd (add-migration *Name*) e no metodo UP colocar o script SQL
+
+Dica: Ao ir fazendo as classes e atributos vá usando o add-migration pois é mais facil de manter o controle,
+ e sempre no final atualiza o database (Update-Database)
+ 
+VALIDATION
+ 
+Ao utilizar as ANOTATIONS o ASP.NET MVC utiliza tanto no Client quanto no Server Side. Por padrão o Client side vem desabilitado,
+portanto é necessário habilitar:
+PS: Custom validator não tem suporte para Client Side Validator
+ 
+Exemplo:
+ 
+@section scripts	
+{
+	//Esse caminho fica no bundle config
+    @Scripts.Render("~/bundles/jqueryval")
+}
+===============API==================
+Para testar no chrome da para utilizar a extensão Postman (Ver se tem para o opera)
+Não é boa prática a API retornar objetos do domínio, tanto de segurança também.
+
+No postman ao usar o POST adicionar Header Content-type application/json
+raw - json
+
+=========== Mapper ==============================
+Install pelo nugget 
+install-package automapper -version:4.1
+
+==================Glimpse=======================
+install-package glimpse.mvc5
+install-package glimpse.ef6
+
+https://localhost:44334/glimpse.axd (Só acessivel localmete por questões de segurança)	
+
+verifica o time das querys	
+
+=====================Session==============================
+-> Ocupa memoria de cache para cada usuario, e isso afeta demais a escalabilidade do sistema
+-> Para disabilitar a Session:
+ <system.web>
+    <sessionState mode="Off"></sessionState>
+===================Optimization==========================
+-> Usar os bundles para carregar os Scripts
+-> Chamar os scripts no HTML no final da pagina porque pode demorar para baixar, então primeiro ele renderiza o HTML e CSS depois carrega os scripts
+
+=====================Elmah=====================
+Error Login Modules and Handlers
+-> Salvar exceptions na memoria, ou databases
+-> Para visualizar as Exceptions: url/elmah.axd
+
+
+
